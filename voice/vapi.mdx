@@ -11,6 +11,56 @@ icon: 'layer-group'
 <Steps>
   <Step title="Create tools">
     In VAPI, you'll need to create the `SendContextToProtegee` and `GetContextFromProtegee` tools in order to let your agent interact with Protegee. Don't worry, all this requires from you is to press a button.
+
+    You'll want to grab your VAPI private api key. It will look like:
+    <img
+        className="block"
+        src="/images/vapi-api-key.png"
+    />
+
+    Once you have that, you can run the following curl command (but replace `my_protegee_api_token` and `my_vapi_private_key` with the correct keys)
+    <CodeGroup>
+
+    ```bash cURL
+    curl --request POST \
+    --url 'https://protegee.ai/voice/api/v1/vapi/create_tools?api_token=my_protegee_api_token' \
+    --header 'Content-Type: application/json' \
+    --data '{
+    "vapi_key": "my_vapi_private_key"
+    }'
+    ```
+
+    ```python Python
+    import requests
+
+    url = "https://protegee.ai/voice/api/v1/vapi/create_tools"
+
+    querystring = {"api_token":"my_protegee_api_token"}
+
+    payload = {"vapi_key": "my_vapi_private_key"}
+    headers = {"Content-Type": "application/json"}
+
+    response = requests.request("POST", url, json=payload, headers=headers, params=querystring)
+
+    print(response.text)
+    ```
+
+    ```java Java
+    const options = {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: '{"vapi_key":"my_vapi_private_key"}'
+    };
+
+    fetch('https://protegee.ai/voice/api/v1/vapi/create_tools?api_token=my_protegee_api_token', options)
+    .then(response => response.json())
+    .then(response => console.log(response))
+    .catch(err => console.error(err));
+    ```
+    </CodeGroup>
+
+    You can also manually try out the endpoint by checking out: [VAPI Create Tools](http://localhost:3000/api-reference/endpoint/create-tools_vapi)
+
   </Step>
   <Step title="Setup forwarding phone number + Enable SendContextFromProtegee">
     On Assistant 1's function page, make sure `SendContextFromProtegee` is selected from the dropdown and the forwarding phone number is set to Protegee's number (you can this at [settings](https://protegee.ai/settings)).
@@ -39,7 +89,7 @@ icon: 'layer-group'
 
 ### Checking on the status of the payment
 
-The following instructions are OPTIONAL
+The following instructions are OPTIONAL. If you specified a number in the `callback` field, [Protegee](https://protegee.ai) will transfer the caller back to this number once the payment process is complete. In order to continue the call, you'll want to make a webhook to get details on how the call went. The following are instructions on how to do that.
 
 <Steps>
   <Step title="Setup a callback agent">
