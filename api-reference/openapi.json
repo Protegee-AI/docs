@@ -299,6 +299,98 @@
         }
       }
     },
+    "/voice/api/v1/vapi/create_tools": {
+      "post": {
+        "summary": "Create VAPI Tools",
+        "description": "Creates GET and SET context tools in VAPI using the provided API credentials",
+        "operationId": "createVAPITool",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "api_token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Protegee API token for authentication"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "vapi_key"
+                ],
+                "properties": {
+                  "vapi_key": {
+                    "type": "string",
+                    "description": "VAPI authentication key",
+                    "example": "vapi_1234567890"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tools created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "set-context": {
+                      "type": "object",
+                      "properties": {
+                        "status_code": {
+                          "type": "integer",
+                          "example": 200
+                        },
+                        "response": {
+                          "type": "object"
+                        }
+                      }
+                    },
+                    "get-context": {
+                      "type": "object",
+                      "properties": {
+                        "status_code": {
+                          "type": "integer",
+                          "example": 200
+                        },
+                        "response": {
+                          "type": "object"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/voice/api/v1/vapi/set-context": {
       "post": {
         "tags": [

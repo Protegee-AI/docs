@@ -6,3 +6,64 @@ icon: 'layer-group'
 
 ## Integration
 
+### Collecting Payment
+
+<Steps>
+  <Step title="Create tools">
+    In VAPI, you'll need to create the `SendContextToProtegee` and `GetContextFromProtegee` tools in order to let your agent interact with Protegee. Don't worry, all this requires from you is to press a button.
+  </Step>
+  <Step title="Setup forwarding phone number + Enable SendContextFromProtegee">
+    On Assistant 1's function page, make sure `SendContextFromProtegee` is selected from the dropdown and the forwarding phone number is set to Protegee's number (you can this at [settings](https://protegee.ai/settings)).
+    <img
+        className="block"
+        src="/images/vapi-setup-forwarding.png"
+        alt="Hero Light"
+    />
+  </Step>
+  <Step title="Prompt your agent to call SendContextToProtegee tool + transfer the call">
+    This lets Protegee know who to handle the payment for and how much. Something similar to:
+
+    <Card title="Agent Instructions" icon="robot" horizontal>
+        <li>Send the details to Protegee with the tool SendContextToProtegee, including all fields
+            requested by SendContextToProtegee</li>
+        <li>Let the caller know you need to take a $25 deposit to confirm the appointment, and ask
+            them to let you know when they're ready with their credit card</li>
+        <li>Transfer the caller to Protegee at the saved transfer phone number. Just tell the caller
+            to hang on one sec while you get the secure payment process ready.</li>
+    </Card>
+  </Step>
+  <Step title="Give it a shot">
+    If you have any issues, check out the [debug](https://protegee.ai/debug) page for more information.
+  </Step>
+</Steps>
+
+### Checking on the status of the payment
+
+The following instructions are OPTIONAL
+
+<Steps>
+  <Step title="Setup a callback agent">
+    If you'd like the caller to be transferred back from Protegee, make a second agent and enable `GetContextFromProtegee` on the agent's Functions page.
+  </Step>
+  <Step title="Enable GetContextFromProtegee tool call for the agent">
+    On Assistant 1's function page, make sure `SendContextFromProtegee` is selected from the dropdown and the forwarding phone number is set to Protegee's number (you can this at [settings](https://protegee.ai/settings)).
+    <img
+        className="block"
+        src="/images/vapi-add-get-context-tool.png"
+        alt="Hero Light"
+    />
+  </Step>
+  <Step title="Prompt your agent to check the status">
+    You can add something like this to Agent 2's prompt.
+    <Card title="Agent Prompt" icon="robot" horizontal>
+        After you greet the caller with the first message, immediately call the
+        GetContextFromProtegee function and read back the response to the caller.
+        Then ask if there's anything else you can help with.
+        If they wish to book an appointment, your goal is to gather necessary information from
+        callers in a friendly and efficient manner like follows…
+    </Card>
+  </Step>
+  <Step title="Try it out!">
+    If you have any issues, check out the [debug](https://protegee.ai/debug) page for more information.
+  </Step>
+</Steps>
