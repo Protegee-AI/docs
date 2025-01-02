@@ -10,7 +10,7 @@
   },
   "servers": [
     {
-      "url": "http://sandbox.mintlify.com"
+      "url": "https://good-quagga-largely.ngrok-free.app/"
     }
   ],
   "security": [
@@ -19,29 +19,256 @@
     }
   ],
   "paths": {
-    "/plants": {
-      "get": {
-        "description": "Returns all plants from the system that the user has access to",
+    "/voice/api/v1/twilio/set-context": {
+      "post": {
+        "description": "Sets context for a Twilio voice call with the provided details",
         "parameters": [
           {
-            "name": "limit",
+            "name": "api_token",
             "in": "query",
-            "description": "The maximum number of results to return",
+            "description": "API token to authenticate the request",
+            "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "caller": {
+                    "type": "string",
+                    "description": "Phone number of the caller (your customer)",
+                    "default": "+16151231234"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Details about the purchase",
+                    "default": "Reservation for two at The Gourmet Bistro, 7:30 PM on December 30th, 2024, Table 12, Indoor seating, Special request: Window view, Confirmation number: 12345"
+                  },
+                  "price": {
+                    "type": "string",
+                    "description": "Price of the item (in USD), e.g. 10.50",
+                    "default": "10.00"
+                  },
+                  "vendor": {
+                    "type": "string",
+                    "description": "Who this payment should be sent to - please refer to the /vendors page to find the full list",
+                    "default": "example-co"
+                  },
+                  "customer_id": {
+                    "type": "string",
+                    "description": "To specify the processor-specific customer ID (if you have it). Only used if processor is Authorize.net.",
+                    "default": ""
+                  },
+                  "persona": {
+                    "type": "string",
+                    "description": "Which voice to use - currently available: 'english-jessica'",
+                    "default": "english-jessica"
+                  },
+                  "callback": {
+                    "type": "string",
+                    "description": "Phone number to hand the call back to after the payment is processed, e.g. +14155552671",
+                    "default": "+14155552671"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "Email of the caller (your customer)",
+                    "format": "email",
+                    "default": "my_customer@company.com"
+                  },
+                  "full_name": {
+                    "type": "string",
+                    "description": "Name of the caller (your customer)",
+                    "default": "John Doe"
+                  },
+                  "transaction_type": {
+                    "type": "string",
+                    "description": "How to process the transaction",
+                    "default": "once",
+                    "enum": [
+                      "once",
+                      "subscription",
+                      "authorize"
+                    ]
+                  },
+                  "memory": {
+                    "type": "string",
+                    "description": "Literally anything. Typically used to share information across agents."
+                  }
+                },
+                "required": [
+                  "caller",
+                  "description",
+                  "price",
+                  "vendor"
+                ]
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
-            "description": "Plant response",
+            "description": "Get / Set Context Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plant"
+                  "$ref": "#/components/schemas/ContextResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "error"
+                      ]
+                    },
+                    "message": {
+                      "description": "Details about the response",
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/voice/api/v1/twilio/get-context": {
+      "post": {
+        "description": "After a call is complete, you can use this to retrieve context about the call",
+        "parameters": [
+          {
+            "name": "api_token",
+            "in": "query",
+            "description": "API token to authenticate the request",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "caller": {
+                    "type": "string",
+                    "description": "Phone number of the caller (your customer)",
+                    "default": "+16151231234"
+                  }
+                },
+                "required": [
+                  "caller"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "caller": {
+                      "type": "string",
+                      "description": "Phone number of the caller (your customer)"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "Details about the purchase",
+                      "default": "Reservation for two at The Gourmet Bistro, 7:30 PM on December 30th, 2024, Table 12, Indoor seating, Special request: Window view, Confirmation number: 12345"
+                    },
+                    "price": {
+                      "type": "string",
+                      "description": "Price of the item (in USD), e.g. 10.50",
+                      "default": "10.00"
+                    },
+                    "vendor": {
+                      "type": "string",
+                      "description": "Who this payment should be sent to - please refer to the /vendors page to find the full list",
+                      "default": "example-co"
+                    },
+                    "customer_id": {
+                      "type": "string",
+                      "description": "To specify the processor-specific customer ID (if you have it). Only used if processor is Authorize.net.",
+                      "default": ""
+                    },
+                    "persona": {
+                      "type": "string",
+                      "description": "Which voice to use - currently available: 'english-jessica'",
+                      "default": "english-jessica"
+                    },
+                    "callback": {
+                      "type": "string",
+                      "description": "Phone number to hand the call back to after the payment is processed, e.g. +14155552671",
+                      "default": "+14155552671"
+                    },
+                    "email": {
+                      "type": "string",
+                      "description": "Email of the caller (your customer)",
+                      "format": "email",
+                      "default": "my_customer@company.com"
+                    },
+                    "full_name": {
+                      "type": "string",
+                      "description": "Name of the caller (your customer)",
+                      "default": "John Doe"
+                    },
+                    "transaction_type": {
+                      "type": "string",
+                      "description": "How to process the transaction",
+                      "default": "once",
+                      "enum": [
+                        "once",
+                        "subscription",
+                        "authorize"
+                      ]
+                    },
+                    "memory": {
+                      "type": "string",
+                      "description": "Literally anything. Typically used to share information across agents.",
+                      "default": ""
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "How the call went",
+                      "default": "payment-success"
+                    },
+                    "start_time": {
+                      "type": "string",
+                      "description": "When the call was initiated.",
+                      "default": "2024-12-30T02:59:32.213280+00:00"
+                    },
+                    "processor": {
+                      "type": "object",
+                      "description": "dynamic response that is unique to the payment processor",
+                      "default": {}
+                    },
+                    "debug": {
+                      "type": "string",
+                      "description": "Any misc details to help debug issues",
+                      "default": ""
+                    }
                   }
                 }
               }
@@ -52,43 +279,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "description": "Creates a new plant in the store",
-        "requestBody": {
-          "description": "Plant to add to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Plant"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "error"
+                      ]
+                    },
+                    "message": {
+                      "description": "Details about the response",
+                      "type": "object"
+                    }
+                  }
                 }
               }
             }
@@ -96,32 +299,947 @@
         }
       }
     },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
+    "/voice/api/v1/vapi/set-context": {
+      "post": {
+        "tags": [
+          "Context"
+        ],
+        "summary": "Set context for VAPI call",
+        "description": "Sets up the context for a VAPI call using customer information and payment details",
+        "operationId": "setContextForVAPI",
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "description": "ID of plant to delete",
+            "in": "query",
+            "name": "api_token",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
+              "type": "string"
+            },
+            "description": "API token for authentication"
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "message"
+                ],
+                "properties": {
+                  "message": {
+                    "type": "object",
+                    "required": [
+                      "customer",
+                      "toolCalls"
+                    ],
+                    "properties": {
+                      "customer": {
+                        "type": "object",
+                        "required": [
+                          "number"
+                        ],
+                        "properties": {
+                          "number": {
+                            "type": "string",
+                            "description": "Customer's phone number",
+                            "example": "+1234567890"
+                          }
+                        }
+                      },
+                      "toolCalls": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "function"
+                          ],
+                          "properties": {
+                            "function": {
+                              "type": "object",
+                              "required": [
+                                "name",
+                                "arguments"
+                              ],
+                              "properties": {
+                                "name": {
+                                  "type": "string",
+                                  "enum": [
+                                    "SendContextToProtegee"
+                                  ]
+                                },
+                                "arguments": {
+                                  "type": "object",
+                                  "required": [
+                                    "description",
+                                    "price",
+                                    "vendor"
+                                  ],
+                                  "properties": {
+                                    "description": {
+                                      "type": "string",
+                                      "example": "iPhone 15 Pro Max"
+                                    },
+                                    "price": {
+                                      "type": "string",
+                                      "example": "999.99"
+                                    },
+                                    "vendor": {
+                                      "type": "string",
+                                      "example": "Apple Store"
+                                    },
+                                    "customer_id": {
+                                      "type": "string"
+                                    },
+                                    "persona": {
+                                      "type": "string",
+                                      "default": "english-jessica"
+                                    },
+                                    "callback": {
+                                      "type": "string"
+                                    },
+                                    "email": {
+                                      "type": "string"
+                                    },
+                                    "full_name": {
+                                      "type": "string"
+                                    },
+                                    "memory": {
+                                      "type": "string"
+                                    },
+                                    "transaction_type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "once",
+                                        "subscription",
+                                        "authorize"
+                                      ],
+                                      "default": "once"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
-          },
-          "400": {
-            "description": "unexpected error",
+          "200": {
+            "description": "Context set successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "success"
+                      ]
+                    },
+                    "message": {
+                      "type": "object",
+                      "properties": {
+                        "caller": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "error"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/voice/api/v1/vapi/get-context": {
+      "post": {
+        "description": "Retrieves the context for a VAPI call using the customer's phone number",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "api_token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "API token for authentication"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "message"
+                ],
+                "properties": {
+                  "message": {
+                    "type": "object",
+                    "required": [
+                      "customer",
+                      "toolCalls"
+                    ],
+                    "properties": {
+                      "customer": {
+                        "type": "object",
+                        "required": [
+                          "number"
+                        ],
+                        "properties": {
+                          "number": {
+                            "type": "string",
+                            "description": "Customer's phone number",
+                            "example": "+1234567890"
+                          }
+                        }
+                      },
+                      "toolCalls": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "id",
+                            "function"
+                          ],
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "description": "Tool call ID",
+                              "default": "123456789"
+                            },
+                            "function": {
+                              "type": "object",
+                              "required": [
+                                "name"
+                              ],
+                              "properties": {
+                                "name": {
+                                  "type": "string",
+                                  "description": "Must be \"GetContextFromProtegee\"",
+                                  "enum": [
+                                    "GetContextFromProtegee"
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved context",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "toolCallId": {
+                            "type": "string"
+                          },
+                          "result": {
+                            "type": "object",
+                            "properties": {
+                              "caller": {
+                                "type": "string",
+                                "description": "Phone number of the caller (your customer)"
+                              },
+                              "description": {
+                                "type": "string",
+                                "description": "Details about the purchase",
+                                "default": "Reservation for two at The Gourmet Bistro, 7:30 PM on December 30th, 2024, Table 12, Indoor seating, Special request: Window view, Confirmation number: 12345"
+                              },
+                              "price": {
+                                "type": "string",
+                                "description": "Price of the item (in USD), e.g. 10.50",
+                                "default": "10.00"
+                              },
+                              "vendor": {
+                                "type": "string",
+                                "description": "Who this payment should be sent to - please refer to the /vendors page to find the full list",
+                                "default": "example-co"
+                              },
+                              "customer_id": {
+                                "type": "string",
+                                "description": "To specify the processor-specific customer ID (if you have it). Only used if processor is Authorize.net.",
+                                "default": ""
+                              },
+                              "persona": {
+                                "type": "string",
+                                "description": "Which voice to use - currently available: 'english-jessica'",
+                                "default": "english-jessica"
+                              },
+                              "callback": {
+                                "type": "string",
+                                "description": "Phone number to hand the call back to after the payment is processed, e.g. +14155552671",
+                                "default": "+14155552671"
+                              },
+                              "email": {
+                                "type": "string",
+                                "description": "Email of the caller (your customer)",
+                                "format": "email",
+                                "default": "my_customer@company.com"
+                              },
+                              "full_name": {
+                                "type": "string",
+                                "description": "Name of the caller (your customer)",
+                                "default": "John Doe"
+                              },
+                              "transaction_type": {
+                                "type": "string",
+                                "description": "How to process the transaction",
+                                "default": "once",
+                                "enum": [
+                                  "once",
+                                  "subscription",
+                                  "authorize"
+                                ]
+                              },
+                              "memory": {
+                                "type": "string",
+                                "description": "Literally anything. Typically used to share information across agents.",
+                                "default": ""
+                              },
+                              "status": {
+                                "type": "string",
+                                "description": "How the call went",
+                                "default": "payment-success"
+                              },
+                              "start_time": {
+                                "type": "string",
+                                "description": "When the call was initiated.",
+                                "default": "2024-12-30T02:59:32.213280+00:00"
+                              },
+                              "processor": {
+                                "type": "object",
+                                "description": "dynamic response that is unique to the payment processor",
+                                "default": {}
+                              },
+                              "debug": {
+                                "type": "string",
+                                "description": "Any misc details to help debug issues",
+                                "default": ""
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "toolCallId": {
+                            "type": "string"
+                          },
+                          "result": {
+                            "type": "string",
+                            "description": "Error message"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/voice/api/v1/retell/set-context": {
+      "post": {
+        "tags": [
+          "Context"
+        ],
+        "summary": "Set context for Retell call",
+        "description": "Sets up the context for a Retell call using customer information and payment details",
+        "operationId": "setContextForRetell",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "api_token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "API token for authentication"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "call",
+                  "args"
+                ],
+                "properties": {
+                  "call": {
+                    "type": "object",
+                    "required": [
+                      "direction",
+                      "from_number",
+                      "to_number"
+                    ],
+                    "properties": {
+                      "direction": {
+                        "type": "string",
+                        "enum": [
+                          "inbound",
+                          "outbound"
+                        ]
+                      },
+                      "from_number": {
+                        "type": "string",
+                        "example": "+1234567890"
+                      },
+                      "to_number": {
+                        "type": "string",
+                        "example": "+1987654321"
+                      }
+                    }
+                  },
+                  "args": {
+                    "type": "object",
+                    "required": [
+                      "description",
+                      "price",
+                      "vendor"
+                    ],
+                    "properties": {
+                      "description": {
+                        "type": "string",
+                        "example": "iPhone 15 Pro Max"
+                      },
+                      "price": {
+                        "type": "string",
+                        "example": "999.99"
+                      },
+                      "vendor": {
+                        "type": "string",
+                        "example": "Apple Store"
+                      },
+                      "customer_id": {
+                        "type": "string"
+                      },
+                      "persona": {
+                        "type": "string",
+                        "default": "english-jessica"
+                      },
+                      "callback": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "full_name": {
+                        "type": "string"
+                      },
+                      "memory": {
+                        "type": "string"
+                      },
+                      "transaction_type": {
+                        "type": "string",
+                        "enum": [
+                          "once",
+                          "subscription",
+                          "authorize"
+                        ],
+                        "default": "once"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Context set successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "success"
+                      ]
+                    },
+                    "message": {
+                      "type": "object",
+                      "properties": {
+                        "caller": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "error"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/voice/api/v1/retell/get-context": {
+      "post": {
+        "tags": [
+          "Context"
+        ],
+        "summary": "Get context for Retell AI call",
+        "description": "Retrieves the context for a Retell AI call using the customer's phone number",
+        "operationId": "getContextForRetell",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "api_token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "API token for authentication"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "from_number"
+                ],
+                "properties": {
+                  "llm_id": {
+                    "type": "string",
+                    "description": "LLM identifier"
+                  },
+                  "from_number": {
+                    "type": "string",
+                    "description": "Customer's phone number",
+                    "example": "+1234567890"
+                  },
+                  "to_number": {
+                    "type": "string",
+                    "description": "Destination phone number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved context",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "caller": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "price": {
+                      "type": "string"
+                    },
+                    "vendor": {
+                      "type": "string"
+                    },
+                    "customer_id": {
+                      "type": "string"
+                    },
+                    "callback": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "full_name": {
+                      "type": "string"
+                    },
+                    "memory": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "processor": {
+                      "type": "string"
+                    },
+                    "start_time": {
+                      "type": "string"
+                    },
+                    "debug": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "error"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/voice/api/v1/bland/set-context": {
+      "post": {
+        "tags": [
+          "Context"
+        ],
+        "summary": "Set context for Bland call",
+        "description": "Sets up the context for a Bland call using customer information and payment details",
+        "operationId": "setContextForBland",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "api_token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "API token for authentication"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "caller",
+                  "description",
+                  "price",
+                  "vendor"
+                ],
+                "properties": {
+                  "caller": {
+                    "type": "string",
+                    "description": "Customer's phone number",
+                    "example": "+1234567890"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "iPhone 15 Pro Max"
+                  },
+                  "price": {
+                    "type": "string",
+                    "example": "999.99"
+                  },
+                  "vendor": {
+                    "type": "string",
+                    "example": "Apple Store"
+                  },
+                  "customer_id": {
+                    "type": "string"
+                  },
+                  "persona": {
+                    "type": "string",
+                    "default": "english-jessica"
+                  },
+                  "callback": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "full_name": {
+                    "type": "string"
+                  },
+                  "memory": {
+                    "type": "string"
+                  },
+                  "transaction_type": {
+                    "type": "string",
+                    "enum": [
+                      "once",
+                      "subscription",
+                      "authorize"
+                    ],
+                    "default": "once"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Context set successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "success"
+                      ]
+                    },
+                    "message": {
+                      "type": "object",
+                      "properties": {
+                        "caller": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "error"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/voice/api/v1/bland/get-context": {
+      "post": {
+        "tags": [
+          "Context"
+        ],
+        "summary": "Get context for Bland call",
+        "description": "Retrieves the context for a Bland call using the customer's phone number",
+        "operationId": "getContextForBland",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "api_token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "API token for authentication"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "caller"
+                ],
+                "properties": {
+                  "caller": {
+                    "type": "string",
+                    "description": "Customer's phone number",
+                    "example": "+1234567890"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved context",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "success"
+                      ]
+                    },
+                    "message": {
+                      "type": "object",
+                      "properties": {
+                        "caller": {
+                          "type": "string"
+                        },
+                        "description": {
+                          "type": "string"
+                        },
+                        "price": {
+                          "type": "string"
+                        },
+                        "vendor": {
+                          "type": "string"
+                        },
+                        "customer_id": {
+                          "type": "string"
+                        },
+                        "callback": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "full_name": {
+                          "type": "string"
+                        },
+                        "memory": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string"
+                        },
+                        "processor": {
+                          "type": "string"
+                        },
+                        "start_time": {
+                          "type": "string"
+                        },
+                        "debug": {
+                          "type": "object"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "error"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
@@ -132,63 +1250,26 @@
   },
   "components": {
     "schemas": {
-      "Plant": {
+      "ContextResponse": {
         "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "description": "The name of the plant",
-            "type": "string"
-          },
-          "tag": {
-            "description": "Tag to specify the type",
-            "type": "string"
-          }
-        }
-      },
-      "NewPlant": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Plant"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
-              }
-            }
-          }
-        ]
-      },
-      "Error": {
-        "required": [
-          "error",
+          "status",
           "message"
         ],
         "type": "object",
         "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
+          "status": {
+            "description": "status of the request",
+            "type": "string",
+            "enum": [
+              "success",
+              "error"
+            ]
           },
           "message": {
-            "type": "string"
+            "description": "Details about the response",
+            "type": "object"
           }
         }
-      }
-    },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
       }
     }
   }

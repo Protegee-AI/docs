@@ -1,0 +1,52 @@
+---
+title: 'Payment Processors'
+description: 'This section will show you how to quickly connect your payment processors'
+---
+
+<Tip>
+Feel free to skip ahead to: [API Integration](/voice-api-integration). We've already added a default account called `example-co` to your account when in test mode.
+</Tip>
+
+
+## Connecting your payment processors
+
+On protegee, you can connect as many payment providers as you like. The way they are distinguished is by specifying the `vendor` field in any requests to Protegee. To get you started, we added a test one called `example-co` that you can start using immediately.
+
+<img
+  className="block"
+  src="/images/my-vendors.png"
+  alt="example-co vendor"
+/>
+
+### Setup
+
+Go to [Vendors](https://protegee.ai/vendors). This is where you'll be able to see all your available vendors as well as add new ones.
+
+### For Stripe
+
+Connecting your vendor is as easy as sharing an onboarding link with your customers:
+<img
+  className="block"
+  src="/images/vendors-stripe.png"
+  alt="adding a stripe vendor"
+/>
+
+Just enter a name you'd like to use to refer to your customer. For example, if the company was called `Example Co`, name it `example-co`. If it was `Shake Shack`, name it `shake-shack`.
+
+### For Authorize.net
+
+Same idea here. Obtain the `Login ID` and the `Transaction Key` from your customer, enter it here, and give it an appropriate vendor name. For example, if the company was called `Example Co`, name it `example-co`. If it was `Shake Shack`, name it `shake-shack`.
+<img
+  className="block"
+  src="/images/vendors-authorizenet.png"
+  alt="adding a authorizenet vendor"
+/>
+
+
+### Coming soon
+
+VGS, Adyen
+
+### For any others
+
+Send an email to kirthi@protegee.ai and get integration going.

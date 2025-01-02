@@ -1,11 +1,11 @@
 {
   "$schema": "https://mintlify.com/schema.json",
-  "name": "Starter Kit",
+  "name": "Protegee",
   "logo": {
-    "dark": "/logo/dark.svg",
-    "light": "/logo/light.svg"
+    "dark": "/logo/logo.png",
+    "light": "/logo/logo.png"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/favicon.png",
   "colors": {
     "primary": "#0D9373",
     "light": "#07C983",
@@ -23,29 +23,20 @@
   ],
   "topbarCtaButton": {
     "name": "Dashboard",
-    "url": "https://dashboard.mintlify.com"
+    "url": "https://protegee.ai/dashboard"
   },
   "tabs": [
-    {
-      "name": "API Reference",
-      "url": "api-reference"
-    }
   ],
   "anchors": [
     {
       "name": "Documentation",
       "icon": "book-open-cover",
-      "url": "https://mintlify.com/docs"
+      "url": "https://protegee.ai/docs"
     },
     {
-      "name": "Community",
-      "icon": "slack",
-      "url": "https://mintlify.com/community"
-    },
-    {
-      "name": "Blog",
-      "icon": "newspaper",
-      "url": "https://mintlify.com/blog"
+      "name": "My Account",
+      "icon": "user",
+      "url": "https://protegee.ai/dashboard"
     }
   ],
   "navigation": [
@@ -53,39 +44,36 @@
       "group": "Get Started",
       "pages": [
         "introduction",
-        "quickstart",
-        "development"
+        "payment-processors"
       ]
     },
     {
-      "group": "Essentials",
+      "group": "Integration",
       "pages": [
-        "essentials/markdown",
-        "essentials/code",
-        "essentials/images",
-        "essentials/settings",
-        "essentials/navigation",
-        "essentials/reusable-snippets"
-      ]
-    },
-    {
-      "group": "API Documentation",
-      "pages": [
-        "api-reference/introduction"
+        "voice/api-integration",
+        "voice/twilio",
+        "voice/vapi",
+        "voice/retell",
+        "voice/bland"
       ]
     },
     {
       "group": "Endpoint Examples",
       "pages": [
-        "api-reference/endpoint/get",
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/delete"
+        "api-reference/endpoint/set-context_twilio",
+        "api-reference/endpoint/get-context_twilio",
+        "api-reference/endpoint/set-context_vapi",
+        "api-reference/endpoint/get-context_vapi",
+        "api-reference/endpoint/set-context_retell",
+        "api-reference/endpoint/get-context_retell",
+        "api-reference/endpoint/set-context_bland",
+        "api-reference/endpoint/get-context_bland"
       ]
     }
   ],
   "footerSocials": {
-    "x": "https://x.com/mintlify",
-    "github": "https://github.com/mintlify",
-    "linkedin": "https://linkedin.com/company/mintlify"
+    "x": "https://x.com/protegeeai",
+    "github": "https://github.com/protegee-ai/",
+    "linkedin": "https://www.linkedin.com/company/protegee-ai/"
   }
 }

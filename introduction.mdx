@@ -1,71 +1,64 @@
 ---
 title: Introduction
-description: 'Welcome to the home of your new documentation'
+description: 'Getting started with Protegee'
 ---
 
 <img
-  className="block dark:hidden"
-  src="/images/hero-light.svg"
+  className="block"
+  src="/images/payments-api-logo.jpeg"
   alt="Hero Light"
 />
-<img
-  className="hidden dark:block"
-  src="/images/hero-dark.svg"
-  alt="Hero Dark"
-/>
 
-## Setting up
+## Officially supported voice platforms
 
-The first step to world-class documentation is setting up your editing environments.
-
-<CardGroup cols={2}>
-  <Card
-    title="Edit Your Docs"
-    icon="pen-to-square"
-    href="https://mintlify.com/docs/quickstart"
-  >
-    Get your docs set up locally for easy development
+<CardGroup cols={4}>
+  <Card title="Twilio" icon="phone">
+    For developers building directly on top of https://www.twilio.com/
   </Card>
-  <Card
-    title="Preview Changes"
-    icon="image"
-    href="https://mintlify.com/docs/development"
-  >
-    Preview your changes before you push to make sure they're perfect
+  <Card title="Retell AI" icon="layer-group">
+    For developers building on https://www.retellai.com/
+  </Card>
+  <Card title="Bland AI" icon="layer-group">
+    For developers building on https://www.bland.ai/
+  </Card>
+  <Card title="VAPI" icon="layer-group">
+    For developers building on https://vapi.ai/
   </Card>
 </CardGroup>
 
-## Make it yours
+If you don't see one that you use, just let us know at kirthi@protegee.ai and we'll add it!
 
-Update your docs to your brand and add valuable content for the best user conversion.
+## Officially supported payment processors
+
+<CardGroup cols={3}>
+  <Card title="Stripe" icon="credit-card">
+  </Card>
+  <Card title="Authorize.Net" icon="credit-card">
+  </Card>
+  <Card title="Coming soon..." icon="credit-card">
+    VGS, Adyen
+  </Card>
+</CardGroup>
+
+If you don't see one that you use, just let us know at kirthi@protegee.ai and we'll add it!
+
+## Setting up
+
+Integration takes 2 steps. It's literally 1. a webhook, 2. a call transfer. That's it. The next section will show you how depending on which platform you are using.
 
 <CardGroup cols={2}>
   <Card
-    title="Customize Style"
-    icon="palette"
-    href="https://mintlify.com/docs/settings/global"
+    title="Connecting payment processors"
+    icon="cart-shopping"
+    href="/payment-processors"
   >
-    Customize your docs to your company's colors and brands
+    Follow these steps for connecting your payment processor (like stripe, authorize.net, vgs, adyen, etc)
   </Card>
   <Card
-    title="Reference APIs"
-    icon="code"
-    href="https://mintlify.com/docs/api-playground/openapi"
+    title="Integrating with Protegee"
+    icon="connectdevelop"
+    href="/voice-api-integration"
   >
-    Automatically generate endpoints from an OpenAPI spec
-  </Card>
-  <Card
-    title="Add Components"
-    icon="screwdriver-wrench"
-    href="https://mintlify.com/docs/components/accordion"
-  >
-    Build interactive features and designs to guide your users
-  </Card>
-  <Card
-    title="Get Inspiration"
-    icon="stars"
-    href="https://mintlify.com/customers"
-  >
-    Check out our showcase of our favorite documentation
+    Preview your changes before you push to make sure they're perfect
   </Card>
 </CardGroup>

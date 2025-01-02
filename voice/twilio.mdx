@@ -1,0 +1,78 @@
+---
+title: 'Twilio'
+description: 'Integration steps for Twilio'
+icon: 'phone'
+---
+
+## Integration
+
+### Step 1 - Set Context
+
+Make a webhook to the [Set Context](/api-reference/endpoint/set-context_twilio) endpoint.
+
+For example:
+```python agent.py
+import requests
+
+url = "https://protegee.ai/voice/api/v1/twilio/set-context"
+
+querystring = {"api_token":"test_TASDYICNPFGSDRDRLGOILWWV"}
+
+payload = {
+    "caller": "+16151231234",
+    "description": "Reservation for two at The Gourmet Bistro, 7:30 PM on December 30th, 2024, Table 12, Indoor seating, Special request: Window view, Confirmation number: 12345",
+    "price": "10.00",
+    "vendor": "example-co",
+    "customer_id": "",
+    "persona": "english-jessica",
+    "callback": "+14155552671",
+    "email": "my_customer@company.com",
+    "full_name": "John Doe",
+    "transaction_type": "once",
+    "memory": "John Doe has called in order to make a reservation at Gourmet Bistro. He is celebrating a friends birthday."
+}
+headers = {"Content-Type": "application/json"}
+
+response = requests.request("POST", url, json=payload, headers=headers, params=querystring)
+
+print(response.text)
+```
+
+### Step 2 - Transfer call:
+
+Just like it sounds - this is just a simple transfer. If you were using python, this would look like:
+
+```python
+voice_response.dial(number="<insert protegee's transfer number here>")
+```
+
+### Step 3 - Receive Callback (optional):
+
+If you specified a number in the `callback` field, the caller will be transfered back to this number. There is nothing you need to do for this step.
+
+### Step 4 - Get Context (optional):
+
+After the payment portion is complete, [Protegee](https://protegee.ai/) will transfer the call back to whatever number is specified in the `callback` field.
+In that agent, you'll want to make a webhook to the [Get Context](/api-reference/endpoint/get-context_twilio) endpoint.
+
+This will give you all the context you need to continue the call.
+
+For example:
+```python agent.py
+import requests
+
+url = "https://good-quagga-largely.ngrok-free.app/voice/api/v1/twilio/get-context"
+
+querystring = {"api_token":"test_TASDYICNPFGSDRDRLGOILWWV"}
+
+payload = {"caller": "+16151231234"}
+headers = {"Content-Type": "application/json"}
+
+response = requests.request("POST", url, json=payload, headers=headers, params=querystring)
+
+print(response.text)
+```
+
+<Info>
+  **Hint**: You can use the `memory` field in [Set Context](/api-reference/endpoint/set-context_twilio) in order to share information between your agents! For example, you can pass a summary of the call.
+</Info>
