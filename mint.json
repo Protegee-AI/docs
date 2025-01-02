@@ -18,7 +18,7 @@
   "topbarLinks": [
     {
       "name": "Support",
-      "url": "mailto:hi@mintlify.com"
+      "url": "mailto:help@protegee.ai"
     }
   ],
   "topbarCtaButton": {
@@ -29,14 +29,24 @@
   ],
   "anchors": [
     {
-      "name": "Documentation",
-      "icon": "book-open-cover",
-      "url": "https://protegee.ai/docs"
-    },
-    {
       "name": "My Account",
       "icon": "user",
       "url": "https://protegee.ai/dashboard"
+    },
+    {
+      "name": "Vendors",
+      "icon": "cart-shopping",
+      "url": "https://protegee.ai/vendors"
+    },
+    {
+      "name": "Debug",
+      "icon": "bug-slash",
+      "url": "https://protegee.ai/debug"
+    },
+    {
+      "name": "Settings",
+      "icon": "gear",
+      "url": "https://protegee.ai/settings"
     }
   ],
   "navigation": [
