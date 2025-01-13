@@ -4,5 +4,133 @@ description: 'Integration steps for Retell'
 icon: 'layer-group'
 ---
 
+
 ## Integration
 
+### Collecting Payment
+
+<Steps>
+  <Step title="Create State">
+    In Retell, in order to get started, you'll need to create a new state. This state will be responsible for making the webhook to Protegee and transfering the caller over.
+
+    Inside your agent, start by going over to `Edit Prompt Tree`. Should look something like:
+    <img
+        className="block"
+        src="/images/retell-1-edit_prompt_tree.png"
+    />
+
+    Then, go to the bottom and create a `New State`:
+    <img
+        className="block"
+        src="/images/retell-2-new_state.png"
+    />
+    
+    Then go ahead and click on this new state. You should see a menu bar pop up on the right:
+    <img
+        className="block"
+        src="/images/retell-3-menu_bar.png"
+    />
+
+    In here we will do the following:
+    1. Update the `Custom Function`
+    ```
+    Name: SendContextToProtegee
+    Description: Sends context for the payment to Protegee
+    Your Url: https://protegee.ai/voice/api/v1/retell/set-context?api_token=<YOUR API TOKEN>
+    Parameters:
+    {
+        "type": "object",
+        "properties": {
+            "description": {
+                "type": "string",
+                "description": "just return 'donation' without quotes"
+            },
+            "callback": {
+                "type": "string",
+                "description": "just return '' without quotes"
+            },
+            "persona": {
+                "type": "string",
+                "description": "just return 'english-jessica' without quotes"
+            },
+            "price": {
+                "type": "string",
+                "description": "{{donation_amount}}, formatted with no dollar sign and 2 decimal places"
+            },
+            "vendor": {
+                "type": "string",
+                "description": "just return 'example-co' without quotes"
+            },
+            "email": {
+                "type": "string",
+                "description": "test_account@example.com"
+            },
+            "full_name": {
+                "type": "string",
+                "description": "John Doe"
+            },
+            "memory": {
+                "type": "string",
+                "description": ""
+            }
+        },
+        "required": [
+            "description",
+            "callback",
+            "persona",
+            "price",
+            "vendor",
+            "email",
+            "full_name",
+            "memory"
+        ]
+    }
+    ```
+
+    Lastly, make sure you also set the following:
+    <img
+        className="block"
+        src="/images/retell-4-config.png"
+    />
+
+
+  </Step>
+  <Step title="Configure your voice prompt to call the tool and transfer the call">
+    In your agent prompt, you'll want to update it so that it knows that when the time is ready, to call the tool and transfer the call to Protegee. You'll want something like:
+    ```
+        ...
+        5. Send the details to Protegee with the tool SendContextToProtegee, including all fields requested by SendContextToProtegee
+        6. Let the caller know you'll be transferring them to Protegee, the secure payments agent.
+        7. Transfer the caller to Protegee using TransferToProtegee.
+        ...
+    ```
+  </Step>
+  <Step title="Give it a shot">
+    If you have any issues, check out the [debug](https://protegee.ai/debug) page for more information.
+  </Step>
+</Steps>
+
+### Checking on the status of the payment
+
+The following instructions are OPTIONAL. If you specified a number in the `callback` field, [Protegee](https://protegee.ai) will transfer the caller back to this number once the payment process is complete. In order to continue the call, you'll want to make a webhook to get details on how the call went. The following are instructions on how to do that.
+
+<Steps>
+  <Step title="Setup a callback agent">
+    Similar to the instructions above, you are going to the instructions 
+
+    <img
+        className="block"
+        src="/images/retell-5-get_context.png"
+    />
+
+    ```
+    https://protegee.ai/voice/api/v1/retell/get-context?api_token=<INSERT YOUR API TOKEN HERE>
+    ```
+  </Step>
+  <Step title="Update your agent prompt">
+    Update your agent to check the status of the webhook.
+  </Step>
+  <Step title="Try it out!">
+    If you have any issues, check out the [debug](https://protegee.ai/debug) page for more information.
+  </Step>
+</Steps>
